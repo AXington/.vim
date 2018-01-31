@@ -31,7 +31,7 @@ Enhancements:
 - [ack](https://github.com/mileszs/ack.vim.git)
 - [buffergator](https://github.com/jeetsukumaran/vim-buffergator.git)
 - [clam](https://github.com/sjl/clam.vim.git)
-- [ctrlp](https://github.com/kien/ctrlp.vim.git)
+- [ctrlp](https://github.com/ctrlpvim/ctrlp.vim.git)
 - [easymotion](https://github.com/Lokaltog/vim-easymotion)
 - [easytags](https://github.com/xolox/vim-easytags)
 - [endwise](https://github.com/tpope/vim-endwise.git)
