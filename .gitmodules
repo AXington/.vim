@@ -186,3 +186,6 @@
 	path = bundle/brogrammer
 	url = https://github.com/marciomazza/vim-brogrammer-theme.git
 	ignore = untracked
+[submodule "bundle/python-mode"]
+	path = bundle/python-mode
+	url = https://github.com/python-mode/python-mode.git
