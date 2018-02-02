@@ -39,6 +39,7 @@ Enhancements:
 - [gitv](https://github.com/gregsexton/gitv.git)
 - [nerdcommenter](https://github.com/scrooloose/nerdcommenter)
 - [nerdtree](https://github.com/scrooloose/nerdtree.git)
+- [python-mode](https://github.com/python-mode/python-mode)
 - [recover](https://github.com/chrisbra/Recover.vim.git)
 - [repeat](https://github.com/tpope/vim-repeat.git)
 - [signature](https://github.com/kshenoy/vim-signature.git)
