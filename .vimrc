@@ -769,3 +769,13 @@ if filereadable(expand("~/.pathogen_disabled"))
 endif
 silent! call pathogen#infect()
 silent! call pathogen#helptags()
+
+
+" -- whitespace ------------------------------------------------------------------
+set listchars=tab:>-,trail:~,extends:>,precedes:<
+set list
+
+
+" -- basic usability ------------------------------------------------------------------
+imap jj <esc>
+
