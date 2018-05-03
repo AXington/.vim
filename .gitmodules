@@ -189,3 +189,24 @@
 [submodule "bundle/python-mode"]
 	path = bundle/python-mode
 	url = https://github.com/python-mode/python-mode.git
+[submodule "bundle/tender"]
+	path = bundle/tender
+	url = https://github.com/jacoborus/tender.vim.git
+	ignore = untracked
+[submodule "bundle/solarized8"]
+	path = bundle/solarized8
+	url = https://github.com/lifepillar/vim-solarized8.git
+	ignore = untracked
+[submodule "bundle/pink-moon"]
+	path = bundle/pink-moon
+	url = https://github.com/sts10/vim-pink-moon.git
+	ignore = untracked
+[submodule "bundle/orbital"]
+	path = bundle/orbital
+	url = https://github.com/fcpg/vim-orbital.git
+	ignore = untracked
+[submodule "bundle/one"]
+	path = bundle/one
+	url = https://github.com/rakr/vim-one.git
+	ignore = untracked
+
