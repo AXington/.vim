@@ -16,3 +16,5 @@ endfor
 if hlID('CarriageReturn')
   match CarriageReturn /\r$/
 endif
+
+set nornu
