@@ -49,6 +49,10 @@ BUNDLE_DIR="bundle"
 SETTINGS_DIR="plugin/settings"
 VERBOSE=0
 
+# SELECTED_PATHS is a module-level global so _add_selected_path (defined at
+# top level) can modify it without relying on dynamic scoping.
+SELECTED_PATHS=()
+
 # ------------------------------
 # Logging
 # ------------------------------
@@ -153,7 +157,7 @@ choose_branch() {
   _remote_branch_exists "$path" master && { printf 'master'; return; }
 }
 
-# Deduplicating append into SELECTED_PATHS (used by cmd_update)
+# Deduplicating append into the global SELECTED_PATHS array (used by cmd_update)
 _add_selected_path() {
   local p="$1" e
   for e in "${SELECTED_PATHS[@]+"${SELECTED_PATHS[@]}"}"; do [[ "$e" == "$p" ]] && return; done
@@ -238,9 +242,11 @@ cmd_add() {
   # in the rest of plugin/settings/
   local settings_file="${SETTINGS_DIR}/${PLUGIN_NAME}.vim"
   if [[ -d "$SETTINGS_DIR" && ! -f "$settings_file" ]]; then
-    local header pad
+    local header pad pad_len
     header="$(printf '" -- %s settings' "$PLUGIN_NAME")"
-    printf -v pad '%*s' $(( 80 - ${#header} )) ''
+    pad_len=$(( 80 - ${#header} ))
+    [[ $pad_len -lt 1 ]] && pad_len=1
+    printf -v pad '%*s' "$pad_len" ''
     printf '%s%s\n\n' "$header" "${pad// /-}" > "$settings_file"
     git add "$settings_file"
     log "  Created stub settings file: ${settings_file}"
@@ -348,10 +354,11 @@ cmd_update() {
 
   if [[ $DRY_RUN -eq 0 ]]; then require_clean_tree; fi
 
+  local -a SUBMODULE_PATHS
   mapfile -t SUBMODULE_PATHS < <(all_submodule_paths)
   [[ ${#SUBMODULE_PATHS[@]} -gt 0 ]] || { log "No submodules registered."; exit 0; }
 
-  declare -a SELECTED_PATHS=()
+  SELECTED_PATHS=()
   declare -a NOT_FOUND=()
 
   for t in "${TARGETS[@]}"; do
