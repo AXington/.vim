@@ -173,3 +173,35 @@ buffer. `q` closes it.
 
 `Ctrl-B` opens a symbol list for the current file (functions, classes, methods,
 variables) sorted by scope. Requires ctags. Press Enter to jump to a symbol.
+
+---
+
+## Divine branch
+
+### Python development — python-mode
+
+The linter runs automatically on every save. Errors and warnings appear inline
+in the gutter and in the quickfix list. Checkers: pyflakes, pep8, pep257,
+mccabe. Max line length is 120 characters.
+
+`Ctrl-Space` in insert mode triggers Rope-based semantic completion — it
+understands imports, class attributes, and function signatures across the
+project, not just the current file's tokens.
+
+`Ctrl-c ro` organises imports: removes unused ones, deduplicates, and sorts.
+
+For rename, extract function, extract variable, and other refactoring
+operations, use `:PymodeRope<Tab>` to see available commands.
+
+python-mode detects your active virtualenv via `$VIRTUAL_ENV`. Activate it in
+the shell before opening Vim.
+
+### `jj` to escape insert mode
+
+In addition to `jk`, `jj` also exits insert mode. Both land you in normal mode
+at the same cursor position; use whichever your hands find first.
+
+### Whitespace display
+
+Tabs appear as `>-`, trailing spaces as `~`, and long-line overflow is marked
+at the right edge — always on. `,l` toggles the display if it's in the way.
