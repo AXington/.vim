@@ -30,7 +30,7 @@ Plugins
 | alduin | [AlessandroYorba/Alduin](https://github.com/AlessandroYorba/Alduin) |
 | badwolf | [sjl/badwolf](https://github.com/sjl/badwolf) |
 | brogrammer | [marciomazza/vim-brogrammer-theme](https://github.com/marciomazza/vim-brogrammer-theme) |
-| colour-schemes | [daylerees/colour-schemes](https://github.com/daylerees/colour-schemes) |
+| daylerees-colour-schemes | [daylerees/colour-schemes](https://github.com/daylerees/colour-schemes) |
 | molokai | [tomasr/molokai](https://github.com/tomasr/molokai) |
 | one | [rakr/vim-one](https://github.com/rakr/vim-one) |
 | orbital | [fcpg/vim-orbital](https://github.com/fcpg/vim-orbital) |
@@ -76,10 +76,10 @@ Plugins
 | tabular | [godlygeek/tabular](https://github.com/godlygeek/tabular) |
 | tagbar | [majutsushi/tagbar](https://github.com/majutsushi/tagbar) |
 | textobj-word-column | [coderifous/textobj-word-column.vim](https://github.com/coderifous/textobj-word-column.vim) |
-| tmux-focus-events | [tmux-plugins/vim-tmux-focus-events](https://github.com/tmux-plugins/vim-tmux-focus-events) |
+| vim-tmux-focus-events | [tmux-plugins/vim-tmux-focus-events](https://github.com/tmux-plugins/vim-tmux-focus-events) |
 | undotree | [mbbill/undotree](https://github.com/mbbill/undotree) |
 | unimpaired | [tpope/vim-unimpaired](https://github.com/tpope/vim-unimpaired) |
-| vim-shell | [xolox/vim-shell](https://github.com/xolox/vim-shell) |
+| xolox-shell | [xolox/vim-shell](https://github.com/xolox/vim-shell) |
 | vimux | [benmills/vimux](https://github.com/benmills/vimux) |
 | zoomwin | [vim-scripts/ZoomWin](https://github.com/vim-scripts/ZoomWin) |
 
@@ -249,10 +249,10 @@ auto-closes when it is the only remaining window.
 | Key / Command | Mode | Action |
 |---------------|------|--------|
 | `:git` | command | Auto-expands to `:Git` |
-| `,gs` | normal | `:Gstatus` |
-| `,gb` | normal | `:Gblame` |
-| `,gd` | normal | `:Gdiff` |
-| `,gl` | normal | `:Glog` |
+| `,gs` | normal | `:Git` (interactive status) |
+| `,gb` | normal | `:Git blame` |
+| `,gd` | normal | `:Git diff` |
+| `,gl` | normal | `:Git log` |
 | `,gv` | normal | `:Gitv --all` (full commit browser) |
 | `,gV` | normal + visual | `:Gitv! --all` (file-level history) |
 
