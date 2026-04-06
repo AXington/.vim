@@ -1,0 +1,175 @@
+# Cheat Sheet
+
+Practical reference for customizations, changed defaults, and plugin workflows.
+For the full key map index see [README.md](README.md). Leader key is `,`.
+
+---
+
+## Defaults that work differently here
+
+These are vanilla Vim behaviors that this config changes. If something isn't
+doing what you expect, it's likely one of these.
+
+**`v` starts visual block, `Ctrl-V` starts charwise visual** — swapped from
+stock Vim. Block selection is the more common need in this config, so it gets
+the easier key.
+
+**`'` and `` ` `` are swapped** — jumping to a mark with `'<letter>` lands on
+the exact line *and column* (normally the backtick job). The single-quote jump
+is more precise here by default.
+
+**`j` and `k` move by display line** — on a soft-wrapped paragraph, `j` goes
+to the next visible row, not the next newline. This is almost always what you
+want, and arrow keys behave the same way.
+
+**`p` and `P` in visual mode don't clobber the register** — you can paste the
+same yanked text into multiple places by selecting each target and pressing `p`
+without re-yanking.
+
+**`.` in visual mode repeats on every selected line** — select several lines,
+then `.` applies the last normal-mode operation to each one individually.
+
+**`<` and `>` keep the visual selection active** — you can re-indent
+immediately by pressing the key again without re-selecting.
+
+**`U` is redo** — same as `Ctrl-r`, just easier to reach. Line-undo (the
+original `U`) is gone.
+
+**`Y` yanks to end of line** — consistent with `D` and `C`. The default `Y`
+(which yanked the whole line, same as `yy`) is replaced.
+
+**`jk` exits insert mode** — hit `j` then `k` quickly to return to normal mode.
+Works everywhere insert mode is active. No need to reach for Escape.
+
+---
+
+## Useful custom shortcuts
+
+**System clipboard** — `,y`/`,Y` yank to the clipboard, `,p`/`,P` paste from
+it. Useful whenever you're moving text between Vim and another application.
+
+**Black-hole delete and change** — `,d` and `,c` delete or change without
+touching the unnamed register, so your last yank stays intact. Use this instead
+of `d` when you're about to paste something and don't want to lose it.
+
+**Move lines** — `-` moves the current line (or visual selection) down, `_`
+moves it up. Works in normal and visual mode.
+
+**Highlight and search the word under the cursor without moving** — `,hs`
+highlights the current word as a search term but keeps the cursor where it is.
+`,h1`, `,h2`, `,h3` highlight in yellow, cyan, and green respectively — useful
+for colour-coding multiple things you're tracking. `,<Space>` clears all
+highlights.
+
+**Search-and-replace on the current word** — `,;` starts a `:%s/word//` with
+the word under the cursor pre-filled, cursor between the slashes. Type the
+replacement and press Enter.
+
+**Sudo write** — `:w!!` rewrites the current file via sudo when you opened it
+without the right permissions.
+
+**Swap to the previous buffer** — `,<Tab>` jumps back to the last file you had
+open, like `Alt-Tab` for Vim buffers.
+
+---
+
+## Plugins
+
+### Finding files — fzf
+
+`Ctrl-p` opens the fuzzy file picker. Type any fragment of the filename or
+path. With ripgrep installed the listing is fast, respects `.gitignore`, and
+includes hidden files (excluding `.git/`).
+
+Inside the picker, `Ctrl-t` opens in a new tab, `Ctrl-v` opens a vertical
+split, `Ctrl-x` opens a horizontal split.
+
+### Searching the codebase — ack and ag
+
+`:ack <pattern>` and `:ag <pattern>` search the project and populate the
+quickfix list. `:cn`/`:cp` step through results. To search for the exact word
+under the cursor, `:Ack <C-r><C-w>` inserts it at the command line for you.
+Patterns are Perl-compatible regex.
+
+ag (the Silver Searcher) is faster than ack on large repos; use whichever you
+have. Both auto-ignore `.git/` and respect `.gitignore`.
+
+### Project tree — NERDTree
+
+`Ctrl-N` opens the tree. `Ctrl-F` finds the current buffer in it — useful after
+jumping to a file from search and wanting to see where it lives. The tree
+refreshes automatically on open.
+
+Inside the tree: `s` opens a file in a vertical split, `i` in a horizontal
+split, `t` in a new tab, `I` toggles hidden files. NERDTree closes itself when
+it's the last window.
+
+### Search — incsearch
+
+This plugin silently takes over `/`, `?`, `n`, `N`, `*`, `#`, `g*`, and `g#`.
+The visible change: search highlights clear automatically when you do anything
+other than repeat the search. You no longer need `,<Space>` after navigating to
+a match — the highlighting disappears by itself.
+
+`g/` is added: it highlights matches without moving the cursor, useful for a
+quick visual count.
+
+### Git — fugitive, gitv, and signify
+
+Signify puts `+`/`-`/`~` change markers in the gutter continuously as you edit.
+No action needed. `]c` / `[c` jump between changed hunks.
+
+`,gs` opens the status window. Navigate to a file and:
+- `-` stages or unstages it
+- `=` shows its inline diff
+- `dv` opens a side-by-side diff for the file
+
+`,gd` opens a two-pane diff of the current file against the index. `]c`/`[c`
+jump between hunks, `dp` pushes a hunk to the other side.
+
+`,gv` opens the full commit graph (all branches). `,gV` (or visual `,gV`)
+narrows it to the current file or selected lines — useful for `git log -L`-style
+archaeology without leaving Vim.
+
+### Running commands in tmux — vimux
+
+`,rp` prompts for a command and runs it in a tmux pane next to your Vim
+session. `,rl` repeats the last command — the main loop when iterating on
+tests or a build. `,ri` focuses the pane so you can scroll through output.
+`,rs` sends an interrupt to whatever is running.
+
+Requires an active tmux session. Vim detects the absence of tmux and disables
+the mappings automatically.
+
+### Inline shell output — clam
+
+`!` (normal mode) runs a shell command and puts its output in a scratch buffer
+you can read and yank from without affecting the current file.
+
+In visual mode, `!` pipes the selected text to the command and replaces the
+selection with the output — a fast way to sort, transform, or format a block
+without leaving the editor.
+
+### Aligning text — tabular
+
+`,a=` aligns on `=`, `,a:` aligns on `:` (colon stays with the left side).
+Both work on a visual selection or the current paragraph.
+
+Inside a `|`-delimited structure (Markdown table, Vim help file), typing `|`
+triggers auto-alignment — columns stay tidy as you type.
+
+For anything else: `:Tabularize /<pattern>` aligns on any regex. `:Tabularize
+/=>` for Ruby rockets, `:Tabularize /\s\+` for space-separated columns, and so
+on.
+
+### Browsing undo history — undotree
+
+`Ctrl-u` opens the undo tree. Vim's undo is a tree, not a linear stack — if
+you undo several steps and make a new edit, the earlier branch is not lost.
+The tree visualises every branch and lets you navigate to any past state of the
+buffer. `q` closes it.
+
+### Symbol browser — tagbar
+
+`Ctrl-B` opens a symbol list for the current file (functions, classes, methods,
+variables) sorted by scope. Requires ctags. Press Enter to jump to a symbol.
