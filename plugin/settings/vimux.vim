@@ -8,7 +8,7 @@ let VimuxResetSequence = "q C-u C-l"
 
 " prompt for a command to run
 nnoremap <silent> <leader>rp :VimuxPromptCommand<CR>
- 
+
 " run last command executed by VimuxRunCommand
 nnoremap <silent> <leader>rl :VimuxRunLastCommand<CR>
 

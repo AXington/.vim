@@ -15,8 +15,10 @@ function! s:utf8()
   return '[' . StatusLineUTF8() . ']'
 endfunction
 
-call airline#parts#define_function('ffenc', '<SNR>' . s:SID() . '_ffenc')
-call airline#parts#define_function('utf8', '<SNR>' . s:SID() . '_utf8')
+if exists('*airline#parts#define_function')
+  call airline#parts#define_function('ffenc', '<SNR>' . s:SID() . '_ffenc')
+  call airline#parts#define_function('utf8', '<SNR>' . s:SID() . '_utf8')
+endif
 
 function! s:init()
   if exists(':AirlineRefresh')

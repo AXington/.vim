@@ -79,7 +79,6 @@ Plugins
 | vim-tmux-focus-events | [tmux-plugins/vim-tmux-focus-events](https://github.com/tmux-plugins/vim-tmux-focus-events) |
 | undotree | [mbbill/undotree](https://github.com/mbbill/undotree) |
 | unimpaired | [tpope/vim-unimpaired](https://github.com/tpope/vim-unimpaired) |
-| xolox-shell | [xolox/vim-shell](https://github.com/xolox/vim-shell) |
 | vimux | [benmills/vimux](https://github.com/benmills/vimux) |
 | zoomwin | [vim-scripts/ZoomWin](https://github.com/vim-scripts/ZoomWin) |
 
@@ -89,16 +88,21 @@ Installation
 
 ### Linux / Mac
 
-    $ cd
+    $ cd ~
     $ rm -rf .vim
     $ git clone https://github.com/AXington/.vim.git
-    $ ln -s .vim/.vimrc
+    $ ln -s ~/.vim/.vimrc ~/.vimrc
 
-For the `heavenly` branch, also initialise submodules:
+For the `heavenly` or `Divine` branch, run the setup script — it initialises
+submodules and checks for required tools:
 
-    $ cd .vim
-    $ git checkout heavenly
-    $ git submodule init && git submodule update
+    $ cd ~/.vim
+    $ git checkout heavenly   # or Divine
+    $ bash setup.sh
+
+Or initialise submodules manually:
+
+    $ git submodule update --init --recursive
 
 ### Windows
 

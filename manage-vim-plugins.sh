@@ -34,8 +34,8 @@
 #   ./manage-vim-plugins.sh update --dry-run
 #   ./manage-vim-plugins.sh add https://github.com/junegunn/vim-easy-align
 #   ./manage-vim-plugins.sh add https://github.com/dense-analysis/ale --branch master
-#   ./manage-vim-plugins.sh remove yankring easytags
-#   ./manage-vim-plugins.sh remove ctrlp --keep-settings
+#   ./manage-vim-plugins.sh remove nerdtree fzf
+#   ./manage-vim-plugins.sh remove ag --keep-settings
 #   ./manage-vim-plugins.sh list
 #
 # Notes:
@@ -44,6 +44,12 @@
 #
 
 set -euo pipefail
+
+# mapfile and declare -A require bash 4+; macOS ships bash 3.2 by default.
+if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
+  printf 'ERROR: bash 4+ required (this system has %s). Install via: brew install bash\n' "${BASH_VERSION}" >&2
+  exit 1
+fi
 
 BUNDLE_DIR="bundle"
 SETTINGS_DIR="plugin/settings"
