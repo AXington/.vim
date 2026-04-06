@@ -22,7 +22,9 @@ let g:pymode_lint_options_pep8 = {'max_line_length': g:pymode_options_max_line_l
 
 " -- completion options -------------------------------------------------------------
 let g:pymode_rope_completion = 1
-let g:pymode_rope_completion_bind = '<C-Space>'
+" Leave the completion key unbound; SuperTab (also mapped to <C-Space>) handles
+" dispatch via context-aware completion and will route to Rope automatically.
+let g:pymode_rope_completion_bind = ''
 
 
 " -- refactoring options -------------------------------------------------------------

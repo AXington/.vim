@@ -777,6 +777,6 @@ set listchars=tab:>-,trail:~,extends:>,precedes:<
 set list
 
 
-" -- basic usability -----------------------------------------------------------
+" -- jj escape mapping -------------------------------------------------------
 
-imap jj <esc>
+inoremap jj <esc>

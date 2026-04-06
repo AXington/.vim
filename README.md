@@ -342,7 +342,7 @@ pyflakes, pep8, mccabe, and pep257 (max line length: 120).
 
 | Key | Mode | Action |
 |-----|------|--------|
-| `<C-Space>` | insert (Python) | Rope completion (shares binding with SuperTab) |
+| `<C-Space>` | insert (Python) | SuperTab routes to Rope completion in Python files |
 | `<C-c>ro` | normal (Python) | Rope organize imports |
 
 ### Personal Mappings

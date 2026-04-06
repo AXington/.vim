@@ -184,9 +184,9 @@ The linter runs automatically on every save. Errors and warnings appear inline
 in the gutter and in the quickfix list. Checkers: pyflakes, pep8, pep257,
 mccabe. Max line length is 120 characters.
 
-`Ctrl-Space` in insert mode triggers Rope-based semantic completion — it
-understands imports, class attributes, and function signatures across the
-project, not just the current file's tokens.
+SuperTab (`Ctrl-Space`) drives completion and uses context-awareness to route
+to Rope when in a Python file — it understands imports, class attributes, and
+function signatures across the project, not just the current file's tokens.
 
 `Ctrl-c ro` organises imports: removes unused ones, deduplicates, and sorts.
 
