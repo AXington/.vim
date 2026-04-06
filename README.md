@@ -84,17 +84,17 @@ Plugins
 Installation
 ------------
 
-### Linux / Mac
+### Linux, Mac, Cygwin, and other Unix-like environments
 
-    $ cd ~
+    $ cd
     $ rm -rf .vim
     $ git clone https://github.com/gpakosz/.vim.git
-    $ ln -s ~/.vim/.vimrc ~/.vimrc
+    $ ln -s .vim/.vimrc
 
 For the `heavenly` branch, run the setup script — it initialises
 submodules and checks for required tools:
 
-    $ cd ~/.vim
+    $ cd .vim
     $ git checkout heavenly
     $ bash setup.sh
 
@@ -102,11 +102,27 @@ Or initialise submodules manually:
 
     $ git submodule update --init --recursive
 
+`setup.sh` is portable: if the repo is cloned somewhere other than `~/.vim`
+it will create a `~/.vim` symlink automatically.
+
 ### Windows
 
-Installing this Vim configuration under Windows is similar to Linux and Mac:
-clone the repository into your Windows user profile and create a symbolic link
-using the [Link Shell Extension] tool.
+Several environments work well on Windows, in rough order of recommendation:
+
+**WSL (Windows Subsystem for Linux)** — recommended for most users on Windows
+10/11. Provides a full Linux environment; follow the Linux instructions above
+inside your WSL terminal.
+
+**Git Bash** — ships with [Git for Windows](https://gitforwindows.org/) and
+provides a Bash shell without a full Linux environment. The Linux instructions
+above work as-is.
+
+**Cygwin** — still actively maintained; provides a Unix-like environment on
+Windows. The Linux instructions above work inside a Cygwin terminal. Use the
+Cygwin package installer to add vim, git, and any optional tools.
+
+**Native Windows** — clone the repository into your Windows user profile and
+create a symbolic link using the [Link Shell Extension] tool.
 
 [Link Shell Extension]: http://schinagl.priv.at/nt/hardlinkshellext/hardlinkshellext.html
 

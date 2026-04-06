@@ -10,9 +10,16 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VIM_DIR="${HOME}/.vim"
 VIMRC_TARGET="${HOME}/.vimrc"
 VIMRC_SOURCE="${SCRIPT_DIR}/.vimrc"
-OS="$(uname -s)"
+
+case "$(uname -s)" in
+  Darwin)   OS="mac" ;;
+  CYGWIN*)  OS="cygwin" ;;
+  MINGW*|MSYS*) OS="gitbash" ;;
+  *)        OS="linux" ;;
+esac
 
 # ------------------------------
 # Output helpers
@@ -30,10 +37,13 @@ info() { printf "       %s\n"          "$*"; }
 step() { printf "\n${B}── %s${N}\n"    "$*"; }
 
 _suggest() {
-  local brew_pkg="${1}" apt_pkg="${2:-$1}"
-  [[ "$OS" == "Darwin" ]] \
-    && info "brew install ${brew_pkg}" \
-    || info "sudo apt install ${apt_pkg}"
+  local brew_pkg="${1}" linux_pkg="${2:-$1}"
+  case "$OS" in
+    mac)     info "brew install ${brew_pkg}" ;;
+    cygwin)  info "Install '${linux_pkg}' via the Cygwin package installer" ;;
+    gitbash) info "Install '${brew_pkg}' and ensure it is on your PATH" ;;
+    *)       info "sudo apt install ${linux_pkg}" ;;
+  esac
 }
 
 ISSUES=0
@@ -60,7 +70,30 @@ command -v git >/dev/null 2>&1 \
   || { fail "git not found"; exit 1; }
 
 # ------------------------------
-# 2. .vimrc symlink
+# 2. ~/.vim symlink (if repo is not at ~/.vim)
+# ------------------------------
+step "~/.vim"
+
+if [[ "$SCRIPT_DIR" == "$VIM_DIR" ]]; then
+  ok "Repo is already at ~/.vim"
+elif [[ -L "$VIM_DIR" ]]; then
+  existing="$(readlink "$VIM_DIR")"
+  if [[ "$existing" == "$SCRIPT_DIR" ]]; then
+    ok "~/.vim already points here"
+  else
+    warn "~/.vim points elsewhere: ${existing}"
+    warn "Remove it manually and re-run to switch."; note_issue
+  fi
+elif [[ -d "$VIM_DIR" ]]; then
+  warn "~/.vim exists as a real directory — cannot create symlink"
+  warn "Back it up and remove it, then re-run."; note_issue
+else
+  ln -s "$SCRIPT_DIR" "$VIM_DIR"
+  ok "~/.vim → ${SCRIPT_DIR}"
+fi
+
+# ------------------------------
+# 3. .vimrc symlink
 # ------------------------------
 step ".vimrc symlink"
 
@@ -83,7 +116,7 @@ else
 fi
 
 # ------------------------------
-# 3. Git submodules (plugins)
+# 4. Git submodules (plugins)
 # ------------------------------
 step "Plugins"
 
@@ -97,7 +130,7 @@ else
 fi
 
 # ------------------------------
-# 4. Optional tool checks
+# 5. Optional tool checks
 # ------------------------------
 # Only run checks relevant to what is actually installed in bundle/
 
