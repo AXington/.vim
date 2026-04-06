@@ -779,4 +779,4 @@ set list
 
 " -- jj escape mapping -------------------------------------------------------
 
-inoremap jj <esc>
+inoremap jj <ESC>`^

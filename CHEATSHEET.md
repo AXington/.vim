@@ -199,7 +199,7 @@ the shell before opening Vim.
 ### `jj` to escape insert mode
 
 In addition to `jk`, `jj` also exits insert mode. Both land you in normal mode
-at the same cursor position; use whichever your hands find first.
+at the same cursor position (last insert start point); use whichever your hands find first.
 
 ### Whitespace display
 
