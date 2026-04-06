@@ -324,6 +324,39 @@ SuperTab uses context-aware completion with `<C-P>` as fallback.
 | `,+` | normal | Zoom / unzoom current window (ZoomWin) |
 
 
+Divine Customizations
+---------------------
+
+The `Divine` branch extends `heavenly` with Ali's personal additions.
+
+### Additional Plugin
+
+| Plugin | Repository |
+|--------|------------|
+| python-mode | [python-mode/python-mode](https://github.com/python-mode/python-mode) |
+
+### python-mode
+
+Python 3 mode with virtualenv support enabled. Linting runs on write using
+pyflakes, pep8, mccabe, and pep257 (max line length: 120).
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `<C-Space>` | insert (Python) | Rope completion (shares binding with SuperTab) |
+| `<C-c>ro` | normal (Python) | Rope organize imports |
+
+### Personal Mappings
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `jj` | insert | Exit insert mode (alternative to `jk`) |
+
+### Whitespace Display
+
+Tabs are shown as `>-`, trailing spaces as `~`, and line overflow markers are
+active by default.
+
+
 Customization
 -------------
 
