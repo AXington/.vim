@@ -109,7 +109,41 @@ using the [Link Shell Extension] tool.
 [Link Shell Extension]: http://schinagl.priv.at/nt/hardlinkshellext/hardlinkshellext.html
 
 
-Key Mappings — Core
+Plugin Management
+-----------------
+
+`manage-vim-plugins.sh` is a shell script for managing plugins as git submodules.
+Run it from the root of your `.vim` repository.
+
+```
+Usage: ./manage-vim-plugins.sh <command> [options]
+
+Commands:
+  update [all|<name>...]    Update one or all plugins to latest (default)
+  add <url> [--name <n>] [--branch <b>]   Add a plugin submodule
+  remove <name>... [--keep-settings]      Remove one or more plugins
+  list                      Show all registered plugins with URLs and branches
+```
+
+**Options:**
+
+| Command  | Option            | Effect |
+|----------|-------------------|--------|
+| `update` | `--dry-run`       | Show what would happen without making changes |
+| `update` | `--no-commit`     | Update pointers but do not commit |
+| `update` | `--verbose`       | More detailed output |
+| `add`    | `--name <name>`   | Override plugin directory name |
+| `add`    | `--branch <b>`    | Pin to a specific upstream branch |
+| `add`    | `--no-commit`     | Stage changes but do not commit |
+| `remove` | `--keep-settings` | Skip removal of `plugin/settings/<name>.vim` |
+| `remove` | `--no-commit`     | Stage changes but do not commit |
+
+Running without arguments is equivalent to `update all`.
+
+`add` automatically creates a stub `plugin/settings/<name>.vim` file.
+
+
+
 -------------------
 
 Leader key is `,`.
@@ -170,7 +204,7 @@ Leader key is `,`.
 | `v` ↔ `<C-V>` | normal | Swap charwise and blockwise visual modes |
 | `<Tab>` / `<S-Tab>` | visual | Indent / dedent selection |
 | `<` / `>` | visual | Indent / dedent and stay in visual mode |
-| `inoremap jk` | insert | Exit insert mode |
+| `jk` | insert | Exit insert mode |
 | `<CR>` | normal | Insert blank line below cursor |
 | `,pp` | normal | Toggle paste mode |
 | `,rt` | normal | Retab buffer |
