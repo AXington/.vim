@@ -47,12 +47,13 @@ set -euo pipefail
 
 BUNDLE_DIR="bundle"
 SETTINGS_DIR="plugin/settings"
+VERBOSE=0
 
 # ------------------------------
 # Logging
 # ------------------------------
 log()  { printf '%s\n' "$*"; }
-vlog() { [[ ${VERBOSE:-0} -eq 1 ]] && printf '[verbose] %s\n' "$*" || true; }
+vlog() { [[ $VERBOSE -eq 1 ]] && printf '[verbose] %s\n' "$*" || true; }
 err()  { printf 'ERROR: %s\n' "$*" >&2; }
 
 die() { err "$1"; exit "${2:-1}"; }
@@ -63,7 +64,8 @@ die() { err "$1"; exit "${2:-1}"; }
 COMMAND=""
 declare -a ARGS=()
 
-print_help() { grep '^#' "$0" | sed 's/^# \{0,1\}//'; }
+# grep '^#[^!]' skips the shebang line
+print_help() { grep '^#[^!]' "$0" | sed 's/^# \{0,1\}//'; }
 
 if [[ $# -eq 0 ]]; then
   COMMAND="update"
@@ -126,13 +128,45 @@ require_clean_tree() {
 }
 
 # ------------------------------
+# Branch resolution helpers (used by cmd_update)
+# ------------------------------
+_branch_from_gitmodules() {
+  git config -f .gitmodules "submodule.${1}.branch" 2>/dev/null || true
+}
+
+_remote_default_branch() {
+  git -C "$1" symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null \
+    | sed 's#^origin/##' || true
+}
+
+_remote_branch_exists() {
+  git -C "$1" rev-parse --verify --quiet "origin/${2}" >/dev/null 2>&1
+}
+
+choose_branch() {
+  local key="$1" path="$2" pinned def
+  pinned="$(_branch_from_gitmodules "$key")"
+  if [[ -n "${pinned:-}" ]]; then printf '%s' "$pinned"; return; fi
+  def="$(_remote_default_branch "$path")"
+  if [[ -n "${def:-}" ]]; then printf '%s' "$def"; return; fi
+  _remote_branch_exists "$path" main   && { printf 'main';   return; }
+  _remote_branch_exists "$path" master && { printf 'master'; return; }
+}
+
+# Deduplicating append into SELECTED_PATHS (used by cmd_update)
+_add_selected_path() {
+  local p="$1" e
+  for e in "${SELECTED_PATHS[@]+"${SELECTED_PATHS[@]}"}"; do [[ "$e" == "$p" ]] && return; done
+  SELECTED_PATHS+=("$p")
+}
+
+# ------------------------------
 # Command: list
 # ------------------------------
 cmd_list() {
-  local count=0 p url branch
+  local count=0 p key url branch
   log "Registered plugins:"
   while IFS= read -r p; do
-    local key
     key="$(submodule_key_for_path "$p")"
     url="$(git config -f .gitmodules "submodule.${key}.url" || echo '?')"
     branch="$(git config -f .gitmodules "submodule.${key}.branch" 2>/dev/null || echo '')"
@@ -151,13 +185,16 @@ cmd_list() {
 # Command: add
 # ------------------------------
 cmd_add() {
-  local PLUGIN_NAME="" PIN_BRANCH="" DO_COMMIT=1
-  local url=""
+  local PLUGIN_NAME="" PIN_BRANCH="" DO_COMMIT=1 url=""
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      --name)      shift; PLUGIN_NAME="$1" ;;
-      --branch)    shift; PIN_BRANCH="$1" ;;
+      --name)
+        [[ $# -gt 1 ]] || die "--name requires a value"
+        shift; PLUGIN_NAME="$1" ;;
+      --branch)
+        [[ $# -gt 1 ]] || die "--branch requires a value"
+        shift; PIN_BRANCH="$1" ;;
       --no-commit) DO_COMMIT=0 ;;
       -h|--help)   print_help; exit 0 ;;
       -*)          die "Unknown option for add: $1" 2 ;;
@@ -171,14 +208,12 @@ cmd_add() {
 
   [[ -n "$url" ]] || die "Usage: manage-vim-plugins.sh add <url> [--name <name>] [--branch <branch>]"
 
-  # Derive name from URL if not provided
   if [[ -z "$PLUGIN_NAME" ]]; then
     PLUGIN_NAME="$(basename "$url" .git)"
   fi
 
   local path="${BUNDLE_DIR}/${PLUGIN_NAME}"
 
-  # Check for existing registration
   if git config -f .gitmodules "submodule.${path}.url" >/dev/null 2>&1; then
     die "Plugin '${PLUGIN_NAME}' is already registered at ${path}."
   fi
@@ -193,19 +228,20 @@ cmd_add() {
   log "  Path: ${path}"
   [[ -n "$PIN_BRANCH" ]] && log "  Pinned branch: ${PIN_BRANCH}"
 
-  git submodule add --depth 1 "$url" "$path"
-
   if [[ -n "$PIN_BRANCH" ]]; then
-    git config -f .gitmodules "submodule.${path}.branch" "$PIN_BRANCH"
-    git add .gitmodules
-    log "  Pinned branch '${PIN_BRANCH}' written to .gitmodules."
+    git submodule add --depth 1 --branch "$PIN_BRANCH" "$url" "$path"
+  else
+    git submodule add --depth 1 "$url" "$path"
   fi
 
-  # Create a stub settings file if the settings directory exists
+  # Create a stub settings file padded to 80 columns, matching the convention
+  # in the rest of plugin/settings/
   local settings_file="${SETTINGS_DIR}/${PLUGIN_NAME}.vim"
   if [[ -d "$SETTINGS_DIR" && ! -f "$settings_file" ]]; then
-    printf '" -- %s settings -----------------------------------------------------------\n\n' \
-      "$PLUGIN_NAME" > "$settings_file"
+    local header pad
+    header="$(printf '" -- %s settings' "$PLUGIN_NAME")"
+    printf -v pad '%*s' $(( 80 - ${#header} )) ''
+    printf '%s%s\n\n' "$header" "${pad// /-}" > "$settings_file"
     git add "$settings_file"
     log "  Created stub settings file: ${settings_file}"
   fi
@@ -224,7 +260,7 @@ cmd_add() {
 # Command: remove
 # ------------------------------
 cmd_remove() {
-  local KEEP_SETTINGS=0 DO_COMMIT=1
+  local KEEP_SETTINGS=0 DO_COMMIT=1 name path modules_path settings_file
   declare -a NAMES=()
 
   while [[ $# -gt 0 ]]; do
@@ -246,28 +282,22 @@ cmd_remove() {
   declare -a REMOVED=()
 
   for name in "${NAMES[@]}"; do
-    local path
     path="$(name_to_path "$name")" \
       || die "Plugin '${name}' not found in .gitmodules. Use 'list' to see registered plugins."
 
     log "------------------------------------------------------------"
     log "Removing plugin: ${name} (${path})"
 
-    # Deinit — tolerates uninitialized submodules
     git submodule deinit -f -- "$path" 2>/dev/null || true
+    git rm -f "$path"
 
-    # Remove from working tree and index
-    git rm -f "$path" 2>/dev/null || true
-
-    # Clean up the cached module metadata
-    local modules_path=".git/modules/${path}"
+    modules_path=".git/modules/${path}"
     if [[ -d "$modules_path" ]]; then
       rm -rf "$modules_path"
       vlog "Removed cached module metadata: ${modules_path}"
     fi
 
-    # Remove settings file unless --keep-settings
-    local settings_file="${SETTINGS_DIR}/${name}.vim"
+    settings_file="${SETTINGS_DIR}/${name}.vim"
     if [[ -f "$settings_file" ]]; then
       if [[ $KEEP_SETTINGS -eq 1 ]]; then
         log "  Keeping settings file: ${settings_file} (--keep-settings)"
@@ -298,7 +328,8 @@ cmd_remove() {
 # Command: update
 # ------------------------------
 cmd_update() {
-  local DRY_RUN=0 DO_COMMIT=1 VERBOSE=0
+  local DRY_RUN=0 DO_COMMIT=1
+  local t p path key old_sha branch cur_branch new_sha msg resolved
   declare -a TARGETS=()
 
   while [[ $# -gt 0 ]]; do
@@ -317,25 +348,17 @@ cmd_update() {
 
   if [[ $DRY_RUN -eq 0 ]]; then require_clean_tree; fi
 
-  # Build path list from .gitmodules
   mapfile -t SUBMODULE_PATHS < <(all_submodule_paths)
   [[ ${#SUBMODULE_PATHS[@]} -gt 0 ]] || { log "No submodules registered."; exit 0; }
 
-  # Resolve targets to paths
   declare -a SELECTED_PATHS=()
-  add_path() {
-    local p="$1"
-    for e in "${SELECTED_PATHS[@]+"${SELECTED_PATHS[@]}"}"; do [[ "$e" == "$p" ]] && return; done
-    SELECTED_PATHS+=("$p")
-  }
-
   declare -a NOT_FOUND=()
+
   for t in "${TARGETS[@]}"; do
     if [[ "$t" == "all" ]]; then
-      for p in "${SUBMODULE_PATHS[@]}"; do add_path "$p"; done
+      for p in "${SUBMODULE_PATHS[@]}"; do _add_selected_path "$p"; done
     else
-      local resolved
-      resolved="$(name_to_path "$t")" && add_path "$resolved" || NOT_FOUND+=("$t")
+      resolved="$(name_to_path "$t")" && _add_selected_path "$resolved" || NOT_FOUND+=("$t")
     fi
   done
 
@@ -344,27 +367,6 @@ cmd_update() {
     log "Use 'list' to see available plugins."
     exit 1
   fi
-
-  # Branch resolution helpers (scoped to update)
-  _branch_from_gitmodules() {
-    git config -f .gitmodules "submodule.${1}.branch" 2>/dev/null || true
-  }
-  _remote_default_branch() {
-    git -C "$1" symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null \
-      | sed 's#^origin/##' || true
-  }
-  _remote_branch_exists() {
-    git -C "$1" rev-parse --verify --quiet "origin/${2}" >/dev/null 2>&1
-  }
-  choose_branch() {
-    local key="$1" path="$2" pinned def
-    pinned="$(_branch_from_gitmodules "$key")"
-    if [[ -n "${pinned:-}" ]]; then printf '%s' "$pinned"; return; fi
-    def="$(_remote_default_branch "$path")"
-    if [[ -n "${def:-}" ]]; then printf '%s' "$def"; return; fi
-    _remote_branch_exists "$path" main  && printf 'main'   && return
-    _remote_branch_exists "$path" master && printf 'master' && return
-  }
 
   declare -a UPDATED_PATHS=()
   declare -A OLD_SHA=() NEW_SHA=() TARGET_BRANCH=()
@@ -375,14 +377,12 @@ cmd_update() {
       continue
     fi
 
-    local key
     key="$(submodule_key_for_path "$path")"
     [[ -n "$key" ]] || { err "Could not resolve submodule key for ${path}"; continue; }
 
     log "------------------------------------------------------------"
     log "Updating: $(basename "$path") (${path})"
 
-    local old_sha branch
     old_sha="$(git -C "$path" rev-parse --short HEAD 2>/dev/null || echo 'UNKNOWN')"
     vlog "Current HEAD: ${old_sha}"
 
@@ -402,25 +402,22 @@ cmd_update() {
     fi
     vlog "Target branch: ${branch}"
 
-    # Ensure local branch tracks remote
     if ! git -C "$path" rev-parse --verify --quiet "$branch" >/dev/null 2>&1; then
       git -C "$path" checkout -B "$branch" "origin/$branch" || {
         err "Failed to checkout ${branch} for $(basename "$path"). Skipping."
         continue
       }
     else
-      local cur_branch
       cur_branch="$(git -C "$path" rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'HEAD')"
       [[ "$cur_branch" != "$branch" ]] && git -C "$path" checkout "$branch"
       git -C "$path" branch --set-upstream-to="origin/$branch" "$branch" 2>/dev/null || true
     fi
 
-    if ! git -C "$path" pull --ff-only --no-rebase 2>/dev/null; then
+    if ! git -C "$path" pull --ff-only --no-rebase; then
       err "Non-fast-forward for $(basename "$path") on ${branch}. Skipping."
       continue
     fi
 
-    local new_sha
     new_sha="$(git -C "$path" rev-parse --short HEAD)"
     OLD_SHA["$path"]="$old_sha"
     NEW_SHA["$path"]="$new_sha"
@@ -434,7 +431,6 @@ cmd_update() {
     fi
   done
 
-  # Summary
   log "============================================================"
   log "Update summary (${#UPDATED_PATHS[@]} processed):"
   for p in "${UPDATED_PATHS[@]+"${UPDATED_PATHS[@]}"}"; do
@@ -442,13 +438,11 @@ cmd_update() {
       "$(basename "$p")" "${OLD_SHA[$p]}" "${NEW_SHA[$p]}" "${TARGET_BRANCH[$p]}"
   done
 
-  # Commit superproject pointer bumps
   if [[ ${#UPDATED_PATHS[@]} -gt 0 && $DRY_RUN -eq 0 && $DO_COMMIT -eq 1 ]]; then
-    git add "${UPDATED_PATHS[@]}" 2>/dev/null || true
+    git add "${UPDATED_PATHS[@]+"${UPDATED_PATHS[@]}"}" 2>/dev/null || true
     if git diff --cached --quiet; then
       log "No superproject changes to commit (all pointers unchanged)."
     else
-      local msg
       msg="Update plugins: $(date -u +'%Y-%m-%d')"
       git commit -m "$msg"
       log "Committed: ${msg}"
