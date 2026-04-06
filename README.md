@@ -76,7 +76,6 @@ Plugins
 | tabular | [godlygeek/tabular](https://github.com/godlygeek/tabular) |
 | tagbar | [majutsushi/tagbar](https://github.com/majutsushi/tagbar) |
 | textobj-word-column | [coderifous/textobj-word-column.vim](https://github.com/coderifous/textobj-word-column.vim) |
-| vim-tmux-focus-events | [tmux-plugins/vim-tmux-focus-events](https://github.com/tmux-plugins/vim-tmux-focus-events) |
 | undotree | [mbbill/undotree](https://github.com/mbbill/undotree) |
 | unimpaired | [tpope/vim-unimpaired](https://github.com/tpope/vim-unimpaired) |
 | vimux | [benmills/vimux](https://github.com/benmills/vimux) |
