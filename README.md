@@ -4,98 +4,123 @@ Vim configuration
 My slick + opinionated `.vimrc` configuration file.
 
 
-Features
+Branches
 --------
 
-This Vim configuration comes in two flavors (branches):
+This configuration comes in three flavors:
 
-- vanilla: a self-contained `.vimrc` configuration file.
-- heavenly: everything present in vanilla + many plugins.
-
-Plugin management is based on Tim Pope's [pathogen].
+| Branch      | Description |
+|-------------|-------------|
+| `vanilla`   | Self-contained `.vimrc`, no plugins. Upstream-synced. |
+| `heavenly`  | vanilla + plugins via [pathogen]. Ali's modernized fork. |
+| `Divine`    | heavenly + personal customizations (python-mode, whitespace display, `jj` escape). |
 
 [pathogen]: https://github.com/tpope/vim-pathogen
-
-List of plugins in the "heavenly" branch:
-
-Colorschemes:
-- [badwolf](https://github.com/sjl/badwolf.git)
-- [molokai](https://github.com/tomasr/molokai.git)
-- [peaksea](https://github.com/vim-scripts/peaksea)
-- [sahara](https://github.com/tejr/sahara.git)
-- [solarized](https://github.com/altercation/vim-colors-solarized.git)
-
-Enhancements:
-
-- [abolish](https://github.com/tpope/vim-abolish.git)
-- [ack](https://github.com/mileszs/ack.vim.git)
-- [buffergator](https://github.com/jeetsukumaran/vim-buffergator.git)
-- [clam](https://github.com/sjl/clam.vim.git)
-- [ctrlp](https://github.com/kien/ctrlp.vim.git)
-- [easymotion](https://github.com/Lokaltog/vim-easymotion)
-- [easytags](https://github.com/xolox/vim-easytags)
-- [endwise](https://github.com/tpope/vim-endwise.git)
-- [fugitive](https://github.com/tpope/vim-fugitive.git)
-- [gitv](https://github.com/gregsexton/gitv.git)
-- [nerdcommenter](https://github.com/scrooloose/nerdcommenter)
-- [nerdtree](https://github.com/scrooloose/nerdtree.git)
-- [recover](https://github.com/chrisbra/Recover.vim.git)
-- [repeat](https://github.com/tpope/vim-repeat.git)
-- [signature](https://github.com/kshenoy/vim-signature.git)
-- [sneak](https://github.com/justinmk/vim-sneak.git)
-- [signify](https://github.com/mhinz/vim-signify.git)
-- [splice](https://github.com/sjl/splice.vim)
-- [supertab](https://github.com/ervandew/supertab.git)
-- [surround](https://github.com/tpope/vim-surround)
-- [tabular](https://github.com/godlygeek/tabular)
-- [tagbar](https://github.com/majutsushi/tagbar)
-- [textobj-word-column](https://github.com/coderifous/textobj-word-column.vim.git)
-- [undotree](https://github.com/mbbill/undotree.git)
-- [unimpaired](https://github.com/tpope/vim-unimpaired.git)
-- [vimux](https://github.com/benmills/vimux.git)
-- [xolox-misc](https://github.com/xolox/vim-misc.git)
-- [xolox-shell](https://github.com/xolox/vim-shell)
-- [yankring](https://github.com/vim-scripts/YankRing.vim)
-- [zoomwin](https://github.com/vim-scripts/ZoomWin.git)
-
-Syntax:
-- [haml](https://github.com/tpope/vim-haml.git)
-- [markdown](https://github.com/tpope/vim-markdown.git)
 
 
 Installation
 ------------
 
-### Linux, Mac, Cygwin
+### Linux / Mac
 
     $ cd
     $ rm -rf .vim
-    $ git clone https://github.com/gpakosz/.vim.git
+    $ git clone https://github.com/AXington/.vim.git
     $ ln -s .vim/.vimrc
-
-For the `heavenly` branch:
-
-    $ cd .vim
-    $ git checkout heavenly
-    $ git submodule init && git submodule update
-
 
 ### Windows
 
-Installing this Vim configuration under Windows is similar to Linux, Mac and
-Cygwin: clone the Git repository in your Windows' user profile and then create a
-symbolic link using the [Link Shell Extension] tool.
+Installing this Vim configuration under Windows is similar to Linux and Mac:
+clone the repository into your Windows user profile and create a symbolic link
+using the [Link Shell Extension] tool.
 
 [Link Shell Extension]: http://schinagl.priv.at/nt/hardlinkshellext/hardlinkshellext.html
+
+
+Key Mappings — Core
+-------------------
+
+Leader key is `,`.
+
+### Config
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `,ev` | normal | Edit `.vimrc` in a vertical split |
+| `,sv` | normal | Source `.vimrc` and reload plugin settings |
+
+### File & Buffer
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `,w` / `,W` | normal + insert | Save buffer / save all buffers |
+| `,q` | normal | Quit |
+| `,t` | normal | New tab |
+| `,cd` | normal | `cd` to current buffer's directory |
+| `,<Tab>` | normal | Switch between last two files |
+| `:w!!` | command | Sudo write |
+
+### Display
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `,n` | normal | Cycle line numbers: relative → absolute → off |
+| `,l` | normal | Toggle display of unprintable characters |
+| `<Space>` | normal | Toggle fold |
+
+### Navigation
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `j` / `k` | normal + visual | Move by display line (wrap-aware) |
+| `<C-h/j/k/l>` | normal | Move between splits |
+| `<Tab><Tab>` | normal | Cycle to next window |
+| `<S-Left/Right/Up/Down>` | normal | Resize splits |
+| `,-` | normal | Horizontal split |
+| `,_` | normal | Vertical split |
+| `<C-e>` / `<C-y>` | normal | Scroll 2 lines down / up |
+| `gI` | normal | Jump to last change position |
+| `'` ↔ `` ` `` | normal | Swapped — mark jumps use line+col by default |
+
+### Editing
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `Y` | normal | Yank to end of line (like `D`, `C`) |
+| `U` | normal | Redo (alias for `<C-r>`) |
+| `J` | normal | Join lines (cursor-preserving) |
+| `S` | normal | Split line at cursor |
+| `,d` / `,c` | normal | Delete / change to black hole register |
+| `,y` / `,Y` | normal | Yank to system clipboard |
+| `,p` / `,P` | normal | Paste from system clipboard |
+| `p` / `P` | visual | Paste without overwriting unnamed register |
+| `-` / `_` | normal + visual | Move current line down / up |
+| `v` ↔ `<C-V>` | normal | Swap charwise and blockwise visual modes |
+| `<Tab>` / `<S-Tab>` | visual | Indent / dedent selection |
+| `<` / `>` | visual | Indent / dedent and stay in visual mode |
+| `jk` | insert | Exit insert mode |
+| `<CR>` | normal | Insert blank line below cursor |
+| `,pp` | normal | Toggle paste mode |
+| `,rt` | normal | Retab buffer |
+| `,s` | normal | Strip trailing whitespace |
+| `,v` | normal | Select last pasted text |
+| `.` | visual | Repeat last normal command on each line |
+
+### Search & Replace
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `,<Space>` | normal | Clear all search highlights |
+| `,hs` | normal | Highlight word under cursor as search term |
+| `,h1` / `,h2` / `,h3` | normal | Highlight word under cursor in yellow / cyan / green |
+| `n` / `N` | normal | Centered next / previous match (with blink) |
+| `*` / `#` | visual | Search for visual selection forward / backward |
+| `&` | visual | Substitute visual selection across buffer |
+| `,;` | normal | Start substitute for word under cursor |
+
 
 Customization
 -------------
 
-If you want to adjust the configuration, create a `.vimrc.local` file in your
-home directory.
-
-For the `heavenly` branch:
-
-If you want to disable plugins, create a `.pathogen_disabled` file in your home
-and list plugins to be disabled (one plugin per line where plugin corresponds to
-the `bundle/plugin` directory).
+To adjust the configuration without touching this repo, create a `~/.vimrc.local`
+file in your home directory. It is sourced automatically at the end of `.vimrc`.
