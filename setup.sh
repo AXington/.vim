@@ -150,25 +150,6 @@ if has_bundle vimux; then
 fi
 
 # ------------------------------
-# 5. python-mode (Divine branch)
-# ------------------------------
-if has_bundle python-mode; then
-  step "python-mode"
-  if command -v python3 >/dev/null 2>&1; then
-    ok "python3 $(python3 --version 2>&1 | awk '{print $2}')"
-  else
-    fail "python3 not found — python-mode requires Python 3"
-    _suggest python3 python3; note_issue
-  fi
-  for pkg in pyflakes pycodestyle pylint; do
-    python3 -c "import ${pkg}" 2>/dev/null \
-      && ok "  ${pkg}" \
-      || { warn "${pkg} not installed (used by python-mode linting)"
-           info "pip3 install ${pkg}"; note_issue; }
-  done
-fi
-
-# ------------------------------
 # Done
 # ------------------------------
 printf "\n"

@@ -11,9 +11,8 @@ This configuration comes in three flavors:
 
 | Branch      | Description |
 |-------------|-------------|
-| `vanilla`   | Self-contained `.vimrc`, no plugins. Upstream-synced. |
-| `heavenly`  | vanilla + plugins via [pathogen]. Ali's modernized fork. |
-| `Divine`    | heavenly + personal customizations (python-mode, whitespace display, `jj` escape). |
+| `vanilla`   | Self-contained `.vimrc`, no plugins. |
+| `heavenly`  | vanilla + plugins via [pathogen]. |
 
 Plugin management is based on Tim Pope's [pathogen].
 
@@ -89,14 +88,14 @@ Installation
 
     $ cd ~
     $ rm -rf .vim
-    $ git clone https://github.com/AXington/.vim.git
+    $ git clone https://github.com/gpakosz/.vim.git
     $ ln -s ~/.vim/.vimrc ~/.vimrc
 
-For the `heavenly` or `Divine` branch, run the setup script — it initialises
+For the `heavenly` branch, run the setup script — it initialises
 submodules and checks for required tools:
 
     $ cd ~/.vim
-    $ git checkout heavenly   # or Divine
+    $ git checkout heavenly
     $ bash setup.sh
 
 Or initialise submodules manually:
