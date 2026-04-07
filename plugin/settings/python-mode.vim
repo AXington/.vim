@@ -1,5 +1,9 @@
 " -- python-mode settings -------------------------------------------------------------
 
+if !has('python3')
+  finish
+endif
+
 " -- general settings -------------------------------------------------------------
 let g:pymode_python = 'python3'
 

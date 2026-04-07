@@ -1,20 +1,23 @@
 " -- NERDTree settings ---------------------------------------------------------
 
 if has("autocmd")
-  autocmd StdinReadPre * let s:std_in=1
-  " open a NERDTree when vim starts up with no files specified
-  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && exists(':NERDTree') | NERDTree | endif
-  " open a NERDTree when vim starts up with on opening a directory
-  autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") && exists(':NERDTree') | exe 'NERDTree' argv()[0] | wincmd p | ene | wincmd p | endif
+  augroup nerdtree_auto
+    autocmd!
+    autocmd StdinReadPre * let s:std_in=1
+    " open a NERDTree when vim starts up with no files specified
+    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") && exists(':NERDTree') | NERDTree | endif
+    " open a NERDTree when vim starts up with on opening a directory
+    autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") && exists(':NERDTree') | exe 'NERDTree' argv()[0] | wincmd p | ene | wincmd p | endif
 
-  " close vim if the only window left open is a NERDTree
-  autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") ) | q | endif
+    " close vim if the only window left open is a NERDTree
+    autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") ) | q | endif
 
-  autocmd BufEnter * if exists('g:NERDTree') && g:NERDTree.IsOpen() | execute 'silent normal R' | endif
+    autocmd BufEnter * if exists('g:NERDTree') && g:NERDTree.IsOpen() | execute 'silent normal R' | endif
+  augroup END
 endif
 
 function! s:NERDTreeToggleAndRefresh()
-  if g:NERDTree.IsOpen()
+  if exists('g:NERDTree') && type(g:NERDTree) == v:t_dict && has_key(g:NERDTree, 'IsOpen') && g:NERDTree.IsOpen()
     NERDTreeClose
   else
     NERDTreeFocus
@@ -23,7 +26,7 @@ function! s:NERDTreeToggleAndRefresh()
 endfunction
 
 function! s:NERDTreeFindAndRefresh()
-  if !g:NERDTree.IsOpen()
+  if !(exists('g:NERDTree') && type(g:NERDTree) == v:t_dict && has_key(g:NERDTree, 'IsOpen') && g:NERDTree.IsOpen())
     NERDTreeFind
     exe 'silent normal R'
   endif

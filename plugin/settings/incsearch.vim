@@ -16,4 +16,7 @@ function! s:init()
   endif
 endfunction
 
-autocmd VimEnter * call <SID>init()
+augroup incsearch_auto
+  autocmd!
+  autocmd VimEnter * call <SID>init()
+augroup END

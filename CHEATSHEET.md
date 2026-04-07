@@ -84,15 +84,15 @@ includes hidden files (excluding `.git/`).
 Inside the picker, `Ctrl-t` opens in a new tab, `Ctrl-v` opens a vertical
 split, `Ctrl-x` opens a horizontal split.
 
-### Searching the codebase — ack and ag
+### Searching the codebase — ack
 
-`:ack <pattern>` and `:ag <pattern>` search the project and populate the
-quickfix list. `:cn`/`:cp` step through results. To search for the exact word
-under the cursor, `:Ack <C-r><C-w>` inserts it at the command line for you.
-Patterns are Perl-compatible regex.
+`:ack <pattern>` searches the project and populates the quickfix list.
+`:cn`/`:cp` step through results. To search for the exact word under the cursor,
+`:Ack <C-r><C-w>` inserts it at the command line for you. Patterns are
+Perl-compatible regex. ack respects `.gitignore` and ignores `.git/`.
 
-ag (the Silver Searcher) is faster than ack on large repos; use whichever you
-have. Both auto-ignore `.git/` and respect `.gitignore`.
+If [ag (the Silver Searcher)](https://github.com/ggreer/the_silver_searcher) is
+installed, ack.vim will use it automatically as a faster backend.
 
 ### Project tree — NERDTree
 

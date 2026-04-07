@@ -168,13 +168,6 @@ if has_bundle ack; then
     || { warn "ack not found — :Ack searches will fail"; _suggest ack ack; note_issue; }
 fi
 
-if has_bundle ag; then
-  step "ag"
-  command -v ag >/dev/null 2>&1 && ok "ag (the silver searcher)" \
-    || { warn "ag not found — :Ag searches will fail"
-         _suggest the_silver_searcher silversearcher-ag; note_issue; }
-fi
-
 if has_bundle vimux; then
   step "vimux / tmux"
   command -v tmux >/dev/null 2>&1 && ok "tmux $(tmux -V | awk '{print $2}')" \
@@ -187,7 +180,11 @@ fi
 # ------------------------------
 if has_bundle python-mode; then
   step "python-mode"
-  if command -v python3 >/dev/null 2>&1; then
+  if ! vim --version | grep -q '+python3\|+python '; then
+    fail "Vim not compiled with Python support — python-mode will not work"
+    info "Install a Python-enabled Vim: brew install vim"
+    note_issue
+  elif command -v python3 >/dev/null 2>&1; then
     ok "python3 $(python3 --version 2>&1 | awk '{print $2}')"
   else
     fail "python3 not found — python-mode requires Python 3"

@@ -14,6 +14,7 @@ This configuration comes in three flavors:
 |-------------|-------------|
 | `vanilla`   | Self-contained `.vimrc`, no plugins. |
 | `heavenly`  | vanilla + plugins via [pathogen]. |
+| `Divine`    | heavenly + personal additions (Copilot, python-mode, jj mapping). |
 
 Plugin management is based on Tim Pope's [pathogen].
 
@@ -47,12 +48,12 @@ Plugins
 |--------|------------|
 | abolish | [tpope/vim-abolish](https://github.com/tpope/vim-abolish) |
 | ack | [mileszs/ack.vim](https://github.com/mileszs/ack.vim) |
-| ag | [rking/ag.vim](https://github.com/rking/ag.vim) |
-| airline | [bling/vim-airline](https://github.com/bling/vim-airline) |
+| ag | [rking/ag.vim](https://github.com/rking/ag.vim) — **removed** (deprecated upstream; use ack.vim with ag as backend) |
+| airline | [vim-airline/vim-airline](https://github.com/vim-airline/vim-airline) |
 | buffergator | [jeetsukumaran/vim-buffergator](https://github.com/jeetsukumaran/vim-buffergator) |
 | clam | [sjl/clam.vim](https://github.com/sjl/clam.vim) |
 | cursorword | [itchyny/vim-cursorword](https://github.com/itchyny/vim-cursorword) |
-| easymotion | [Lokaltog/vim-easymotion](https://github.com/Lokaltog/vim-easymotion) |
+| easymotion | [easymotion/vim-easymotion](https://github.com/easymotion/vim-easymotion) |
 | endwise | [tpope/vim-endwise](https://github.com/tpope/vim-endwise) |
 | fugitive | [tpope/vim-fugitive](https://github.com/tpope/vim-fugitive) |
 | fzf | [junegunn/fzf](https://github.com/junegunn/fzf) |
@@ -74,11 +75,11 @@ Plugins
 | supertab | [ervandew/supertab](https://github.com/ervandew/supertab) |
 | surround | [tpope/vim-surround](https://github.com/tpope/vim-surround) |
 | tabular | [godlygeek/tabular](https://github.com/godlygeek/tabular) |
-| tagbar | [majutsushi/tagbar](https://github.com/majutsushi/tagbar) |
+| tagbar | [preservim/tagbar](https://github.com/preservim/tagbar) |
 | textobj-word-column | [coderifous/textobj-word-column.vim](https://github.com/coderifous/textobj-word-column.vim) |
 | undotree | [mbbill/undotree](https://github.com/mbbill/undotree) |
 | unimpaired | [tpope/vim-unimpaired](https://github.com/tpope/vim-unimpaired) |
-| vimux | [benmills/vimux](https://github.com/benmills/vimux) |
+| vimux | [preservim/vimux](https://github.com/preservim/vimux) |
 | zoomwin | [vim-scripts/ZoomWin](https://github.com/vim-scripts/ZoomWin) |
 
 
@@ -304,7 +305,7 @@ Signify shows VCS diff signs in the gutter for git, hg, and svn.
 
 SuperTab uses context-aware completion with `<C-P>` as fallback.
 
-### Search (incsearch + ack + ag)
+### Search (incsearch + ack)
 
 | Key / Command | Mode | Action |
 |---------------|------|--------|
@@ -313,7 +314,6 @@ SuperTab uses context-aware completion with `<C-P>` as fallback.
 | `g/` | normal | incsearch stay mode — highlight without moving cursor |
 | `n` / `N` / `*` / `#` / `g*` / `g#` | normal | incsearch variants with auto-nohighlight |
 | `:ack` | command | Auto-expands to `:Ack` |
-| `:ag` | command | Auto-expands to `:Ag` |
 
 ### Code Navigation (tagbar + undotree + buffergator + zoomwin)
 
