@@ -351,14 +351,24 @@ pyflakes, pep8, mccabe, and pep257 (max line length: 120).
 |-----|------|--------|
 | `jj` | insert | Exit insert mode (alternative to `jk`) |
 
+### Per-filetype Indentation
+
+Tabs are always expanded to spaces. The number of spaces follows each
+language's community convention:
+
+| Language(s) | Spaces |
+|-------------|--------|
+| Python, Rust, Java, C/C++, Shell, Dockerfile | 4 |
+| YAML, JSON, Terraform/HCL, JavaScript, TypeScript, HTML, CSS, Ruby, Vim, Markdown | 2 |
+| Go, Makefile | tabs (required by language/tooling) |
+
+
 ### Whitespace Display
 
 Tabs are shown as `>-`, trailing spaces as `~`, and line overflow markers are
 active by default.
 
 
-Customization
--------------
 
 To adjust the configuration without touching this repo, create a `~/.vimrc.local`
 file in your home directory. It is sourced automatically at the end of `.vimrc`.

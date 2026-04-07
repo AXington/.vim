@@ -205,3 +205,16 @@ at the same cursor position (last insert start point); use whichever your hands 
 
 Tabs appear as `>-`, trailing spaces as `~`, and long-line overflow is marked
 at the right edge — always on. `,l` toggles the display if it's in the way.
+
+### Indentation
+
+Tabs are always expanded to spaces. The indent width is set automatically
+based on the file type you're editing — you don't need to think about it.
+Open a Python file and you get 4-space indents; open a YAML file and you get
+2-space indents; open a Go file and real tabs are used (because `gofmt`
+requires them). The full table is in the README.
+
+If you're working on a project that uses different conventions, you can
+override locally with `:setlocal shiftwidth=4` for the current buffer, or
+add a project-level `.editorconfig` file — Vim will respect it if the
+`editorconfig` plugin is installed.
