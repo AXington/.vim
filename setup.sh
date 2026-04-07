@@ -123,7 +123,7 @@ step "Plugins"
 cd "$SCRIPT_DIR"
 
 if grep -q 'path = ' .gitmodules 2>/dev/null; then
-  git submodule update --init --recursive
+  git submodule update --init --recursive --force
   ok "Submodules initialised"
 else
   ok "No plugins on this branch"
