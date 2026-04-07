@@ -198,3 +198,7 @@
 	path = bundle/python-mode
 	url = https://github.com/python-mode/python-mode.git
 	ignore = untracked
+[submodule "copilot"]
+	path = bundle/copilot
+	url = https://github.com/github/copilot.vim
+	ignore = untracked

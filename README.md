@@ -329,10 +329,11 @@ Divine Customizations
 
 The `Divine` branch extends `heavenly` with Ali's personal additions.
 
-### Additional Plugin
+### Additional Plugins
 
 | Plugin | Repository |
 |--------|------------|
+| copilot | [github/copilot.vim](https://github.com/github/copilot.vim) |
 | python-mode | [python-mode/python-mode](https://github.com/python-mode/python-mode) |
 
 ### python-mode
@@ -344,6 +345,21 @@ pyflakes, pep8, mccabe, and pep257 (max line length: 120).
 |-----|------|--------|
 | `<C-Space>` | insert (Python) | SuperTab routes to Rope completion in Python files |
 | `<C-c>ro` | normal (Python) | Rope organize imports |
+
+### Copilot
+
+Inline AI completions. Requires Node.js 18+ and a GitHub Copilot subscription.
+Run `:Copilot setup` on first use to authenticate (opens a browser, one-time).
+
+| Key | Mode | Action |
+|-----|------|--------|
+| `Ctrl-j` | insert | Accept suggestion |
+| `Ctrl-]` | insert | Next suggestion |
+| `Ctrl-[` | insert | Previous suggestion |
+| `Ctrl-e` | insert | Dismiss suggestion |
+
+Tab is left free for SuperTab. To disable completions temporarily:
+`:Copilot disable` / `:Copilot enable`.
 
 ### Personal Mappings
 

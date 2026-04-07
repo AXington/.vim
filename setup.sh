@@ -202,8 +202,39 @@ if has_bundle python-mode; then
 fi
 
 # ------------------------------
-# Done
+# 6. Copilot (optional)
 # ------------------------------
+if has_bundle copilot; then
+  step "GitHub Copilot"
+  if command -v node >/dev/null 2>&1; then
+    NODE_MAJOR="$(node --version | grep -oE '[0-9]+' | head -1)"
+    if [[ "$NODE_MAJOR" -ge 18 ]]; then
+      ok "node $(node --version)"
+    else
+      warn "Node.js $(node --version) found — Copilot requires Node 18+"
+      _suggest node nodejs; note_issue
+    fi
+  else
+    fail "Node.js not found — required for Copilot"
+    _suggest node nodejs; note_issue
+  fi
+
+  # Check authentication status without opening a browser
+  if vim --not-a-term -e -u NONE \
+       -c 'set rtp+=bundle/copilot' \
+       -c 'if exists(":Copilot") | Copilot status | else | q! | endif' \
+       -c 'q!' 2>&1 | grep -qi 'signed in'; then
+    ok "Copilot authenticated"
+  else
+    warn "Copilot not authenticated — run ':Copilot setup' inside Vim to sign in"
+    info "This opens a browser and asks you to enter a one-time code."
+    info "After auth, completions appear automatically as you type."
+    info "Accept with Ctrl-j  |  Next suggestion: Ctrl-]  |  Dismiss: Ctrl-e"
+    note_issue
+  fi
+fi
+
+
 printf "\n"
 if [[ $ISSUES -eq 0 ]]; then
   printf "${G}${B}All done.${N} Open something: vim .\n\n"

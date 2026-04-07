@@ -178,6 +178,24 @@ variables) sorted by scope. Requires ctags. Press Enter to jump to a symbol.
 
 ## Divine branch
 
+### GitHub Copilot
+
+Inline AI completions that appear as you type. Suggestions are shown in muted
+text ahead of your cursor — press `Ctrl-j` to accept the whole suggestion, or
+keep typing to ignore it and let the next one appear.
+
+Tab is intentionally left free for SuperTab. The key bindings:
+
+- `Ctrl-j` — accept the current suggestion
+- `Ctrl-]` / `Ctrl-[` — cycle through alternative suggestions
+- `Ctrl-e` — dismiss without accepting
+
+First-time setup: run `:Copilot setup` inside Vim. It will give you a short
+code and open a browser where you paste it into GitHub. One-time per machine.
+After that, completions are always on. Use `:Copilot disable` to turn them off
+for a session, or add a filetype to `g:copilot_filetypes` in
+`plugin/settings/copilot.vim` to disable permanently for that type.
+
 ### Python development — python-mode
 
 The linter runs automatically on every save. Errors and warnings appear inline
