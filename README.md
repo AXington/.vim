@@ -1,7 +1,8 @@
-Vim configuration
-=================
-
-My slick + opinionated `.vimrc` configuration file.
+<div align="center">
+  <img src=".github/assets/divine-transparent.png" width="260" alt="Divine — a glamorous drag queen in a black sequined gown and fur stole">
+  <h1>Vim configuration</h1>
+  <p><em>Slick, opinionated, and unapologetically fabulous.</em></p>
+</div>
 
 
 Branches

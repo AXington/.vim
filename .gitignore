@@ -6,4 +6,5 @@
 .netrwhist
 .viminfo
 .NERDTreeBookmarks
-.github/
+.github/copilot-instructions.md
+**/.DS_Store
