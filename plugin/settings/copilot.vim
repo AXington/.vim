@@ -20,7 +20,6 @@ imap <silent><script><expr> <C-j> copilot#Accept('')
 
 " Cycle through suggestions
 imap <silent> <C-]> <Plug>(copilot-next)
-imap <silent> <C-[> <Plug>(copilot-previous)
 
 " Dismiss suggestion
 imap <silent> <C-e> <Plug>(copilot-dismiss)

@@ -48,7 +48,6 @@ Plugins
 |--------|------------|
 | abolish | [tpope/vim-abolish](https://github.com/tpope/vim-abolish) |
 | ack | [mileszs/ack.vim](https://github.com/mileszs/ack.vim) |
-| ag | [rking/ag.vim](https://github.com/rking/ag.vim) — **removed** (deprecated upstream; use ack.vim with ag as backend) |
 | airline | [vim-airline/vim-airline](https://github.com/vim-airline/vim-airline) |
 | buffergator | [jeetsukumaran/vim-buffergator](https://github.com/jeetsukumaran/vim-buffergator) |
 | clam | [sjl/clam.vim](https://github.com/sjl/clam.vim) |
@@ -356,7 +355,6 @@ Run `:Copilot setup` on first use to authenticate (opens a browser, one-time).
 |-----|------|--------|
 | `Ctrl-j` | insert | Accept suggestion |
 | `Ctrl-]` | insert | Next suggestion |
-| `Ctrl-[` | insert | Previous suggestion |
 | `Ctrl-e` | insert | Dismiss suggestion |
 
 Tab is left free for SuperTab. To disable completions temporarily:

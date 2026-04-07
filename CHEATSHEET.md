@@ -91,8 +91,9 @@ split, `Ctrl-x` opens a horizontal split.
 `:Ack <C-r><C-w>` inserts it at the command line for you. Patterns are
 Perl-compatible regex. ack respects `.gitignore` and ignores `.git/`.
 
-If [ag (the Silver Searcher)](https://github.com/ggreer/the_silver_searcher) is
-installed, ack.vim will use it automatically as a faster backend.
+If [ripgrep](https://github.com/BurntSushi/ripgrep) or
+[ag](https://github.com/ggreer/the_silver_searcher) is installed, ack.vim will
+use it automatically as a faster backend.
 
 ### Project tree — NERDTree
 
@@ -187,7 +188,7 @@ keep typing to ignore it and let the next one appear.
 Tab is intentionally left free for SuperTab. The key bindings:
 
 - `Ctrl-j` — accept the current suggestion
-- `Ctrl-]` / `Ctrl-[` — cycle through alternative suggestions
+- `Ctrl-]` — next alternative suggestion
 - `Ctrl-e` — dismiss without accepting
 
 First-time setup: run `:Copilot setup` inside Vim. It will give you a short
