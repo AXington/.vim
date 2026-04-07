@@ -98,10 +98,10 @@ fi
 step ".vimrc symlink"
 
 if [[ -L "$VIMRC_TARGET" ]]; then
-  existing="$(readlink "$VIMRC_TARGET")"
-  if [[ "$existing" == "$VIMRC_SOURCE" ]]; then
+  if [[ "$VIMRC_TARGET" -ef "$VIMRC_SOURCE" ]]; then
     ok "~/.vimrc already points here"
   else
+    existing="$(readlink "$VIMRC_TARGET")"
     warn "~/.vimrc points elsewhere: ${existing}"
     warn "Remove it manually and re-run to switch."; note_issue
   fi
