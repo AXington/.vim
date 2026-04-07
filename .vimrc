@@ -20,7 +20,7 @@ let maplocalleader=","  " change local leader key to ,
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
 
 " <leader>sv sources .vimrc
-nnoremap <leader>sv :source $MYVIMRC<CR>:runtime! plugin/settings/*<CR>:redraw<CR>:echo $MYVIMRC 'reloaded'<CR>
+nnoremap <leader>sv :source $MYVIMRC<CR>:runtime! plugin/settings/* after/plugin/*<CR>:redraw<CR>:echo $MYVIMRC 'reloaded'<CR>
 
 
 " -- ConEmu integration --------------------------------------------------------
@@ -153,39 +153,25 @@ if has("gui_running")
 endif
 
 if exists("+relativenumber")
-  if v:version >= 400
-    set number
-  endif
+  set number
   set relativenumber  " show relative line numbers
   set numberwidth=3   " narrow number column
   " cycles between relative / absolute / no numbering
-  if v:version >= 400
-    function! RelativeNumberToggle()
-      if (&number == 1 && &relativenumber == 1)
-        set nonumber
-        set relativenumber relativenumber?
-      elseif (&number == 0 && &relativenumber == 1)
-        set norelativenumber
-        set number number?
-      elseif (&number == 1 && &relativenumber == 0)
-        set norelativenumber
-        set nonumber number?
-      else
-        set number
-        set relativenumber relativenumber?
-      endif
-    endfunc
-  else
-    function! RelativeNumberToggle()
-      if (&relativenumber == 1)
-        set number number?
-      elseif (&number == 1)
-        set nonumber number?
-      else
-        set relativenumber relativenumber?
-      endif
-    endfunc
-  endif
+  function! RelativeNumberToggle()
+    if (&number == 1 && &relativenumber == 1)
+      set nonumber
+      set relativenumber relativenumber?
+    elseif (&number == 0 && &relativenumber == 1)
+      set norelativenumber
+      set number number?
+    elseif (&number == 1 && &relativenumber == 0)
+      set norelativenumber
+      set nonumber number?
+    else
+      set number
+      set relativenumber relativenumber?
+    endif
+  endfunc
   nnoremap <silent> <leader>n :call RelativeNumberToggle()<CR>
 else                  " fallback
   set number          " show line numbers
@@ -473,11 +459,6 @@ set whichwrap=b,s,<,> " allow cursor left/right key to wrap to the
                       " previous/next line
                       " omit [,] as we use virtual edit in insert mode
 
-" disable arrow keys
-" nnoremap <Left> :echo "arrow keys disabled, use h"<CR>
-" nnoremap <Right> :echo "arrow keys disabled, use l"<CR>
-" nnoremap <Up> :echo "arrow keys disabled, use k"<CR>
-" nnoremap <Down> :echo "arrow keys disabled, use j"<CR>
 
 " move to the position where the last change was made
 noremap gI `.
@@ -651,7 +632,7 @@ if $TERM_PROGRAM == 'iTerm.app'
   endif
 endif
 
-nnoremap Q <NOP>
+nnoremap Q <NOP>  " disable Ex mode — easy to trigger by accident, rarely useful
 
 " make dot work in visual mode
 vnoremap . :normal .<CR>
@@ -695,13 +676,6 @@ nnoremap <silent> <leader>h1 :highlight Highlight1 ctermfg=0 ctermbg=226 guifg=B
 nnoremap <silent> <leader>h2 :highlight Highlight2 ctermfg=0 ctermbg=51 guifg=Black guibg=Cyan<CR> :execute '2match Highlight2 /\<<C-r><C-w>\>/'<cr>
 nnoremap <silent> <leader>h3 :highlight Highlight3 ctermfg=0 ctermbg=46 guifg=Black guibg=Green<CR> :execute '3match Highlight3 /\<<C-r><C-w>\>/'<cr>
 
-" very magic search patterns
-" everything but '0'-'9', 'a'-'z', 'A'-'Z' and '_' has a special meaning
-"nnoremap / /\v
-"vnoremap / /\v
-"nnoremap ? ?\v
-"vnoremap ? ?\v
-"cnoremap %s/ %s/\v
 
 " replace word under cursor
 nnoremap <leader>; :%s/\<<C-r><C-w>\>//<Left>

@@ -168,13 +168,6 @@ if has_bundle ack; then
     || { warn "ack not found — :Ack searches will fail"; _suggest ack ack; note_issue; }
 fi
 
-if has_bundle ag; then
-  step "ag"
-  command -v ag >/dev/null 2>&1 && ok "ag (the silver searcher)" \
-    || { warn "ag not found — :Ag searches will fail"
-         _suggest the_silver_searcher silversearcher-ag; note_issue; }
-fi
-
 if has_bundle vimux; then
   step "vimux / tmux"
   command -v tmux >/dev/null 2>&1 && ok "tmux $(tmux -V | awk '{print $2}')" \

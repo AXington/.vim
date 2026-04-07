@@ -27,4 +27,7 @@ function! s:init()
   endif
 endfunction
 
-autocmd VimEnter * call <SID>init()
+augroup airline_auto
+  autocmd!
+  autocmd VimEnter * call <SID>init()
+augroup END
