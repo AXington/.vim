@@ -154,22 +154,20 @@ endif
 
 if exists("+relativenumber")
   set number
-  set relativenumber  " show relative line numbers
+  set norelativenumber  " default to absolute line numbers
   set numberwidth=3   " narrow number column
-  " cycles between relative / absolute / no numbering
+  " cycles between absolute / relative / no numbering
   function! RelativeNumberToggle()
-    if (&number == 1 && &relativenumber == 1)
-      set nonumber
+    if (&number == 1 && &relativenumber == 0)
       set relativenumber relativenumber?
-    elseif (&number == 0 && &relativenumber == 1)
-      set norelativenumber
-      set number number?
-    elseif (&number == 1 && &relativenumber == 0)
+    elseif (&number == 1 && &relativenumber == 1)
       set norelativenumber
       set nonumber number?
+    elseif (&number == 0 && &relativenumber == 0)
+      set number number?
     else
-      set number
-      set relativenumber relativenumber?
+      set norelativenumber
+      set number number?
     endif
   endfunc
   nnoremap <silent> <leader>n :call RelativeNumberToggle()<CR>
